@@ -1,31 +1,72 @@
 // script.js
 
-function homeService($http){
-	this.getHome=function getHome(){
-		return $http.get('/about');
-	};
+    // include ngRoute for all our routing needs
+    var demoApp = angular.module('demoApp', ['ngRoute']);
+
+    // configure our routes
+    demoApp.config(function($routeProvider, $locationProvider) {
+  $routeProvider
+
+            // route for the home page
+            .when('/', {
+                templateUrl : 'pages/home.html',
+                controller  : 'mainCtrl'
+            })
+
+            // route for the about page
+            .when('/about', {
+                templateUrl : 'pages/about.html',
+                controller  : 'aboutCtrl'
+            })
+
+            // route for the contact page
+            .when('/contact', {
+                templateUrl : 'pages/contact.html',
+                controller  : 'contactCtrl'
+            });
+
+	   $locationProvider.html5Mode(true);
+    });
+
+/*-------Para el controlador mainCtrl-------------*/
+demoApp.service('mainService',function (){
+        this.myMensaje="Esta es la pagina de bienvenida";
+});
+
+
+function mainController($scope,mainService){
+	$scope.message=mainService.myMensaje;
 }
 
-angular
-	.module('demoApp')
-	.service('homeService',homeService);
+mainController.$inject=['$scope','mainService'];
+demoApp.controller('mainCtrl',mainController); 
+
+/*-------Para el controlador aboutCtrl--------------*/
+demoApp.service('aboutService',function (){
+	this.MyMensaje="Esta es la pagina de acerda de";
+});
 
 
-function homeController(homeService){
-      homeService
-	.getHome()
-	.then(function (response){
-		console.log('responde');
-	});
+function aboutController($scope,aboutService){
+	$scope.message=aboutService.MyMensaje;
 }
 
-angular
-	.module('demoApp')
-	.controller('homeController',homeController)
-	.config(function($locationProvider){
-		 $locationProvider.html5Mode(true);
-	});
+aboutController.$inject=['$scope','aboutService'];	
+demoApp.controller('aboutCtrl', aboutController);
 
+/*--------Para el controlador contactCtrl------------*/
+demoApp.service('contactService',function (){
+	this.MyMensaje="Esta es la pagina de datos de contacto";
+});
+
+
+function contactController($scope, contactService){
+	$scope.message=contactService.MyMensaje;
+}
+
+
+contactController.$inject=['$scope','contactService'];
+demoApp.controller('contactCtrl',contactController);
 
 
 
